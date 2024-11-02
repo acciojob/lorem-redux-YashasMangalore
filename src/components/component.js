@@ -5,36 +5,41 @@ import Intro from "./Intro.js";
 class APP extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      loading: true,
+      error: null,
+    };
   }
 
   componentDidMount() {
-    fetch("https://jsonplaceholder.typicode.com/posts")
-      .then((res) => {
-        return res.json();
+    this.setState({ loading: true, error: null });
+    this.props
+      .fetchPosts() // Assuming fetchPosts is connected via mapDispatchToProps
+      .then(() => {
+        this.setState({ loading: false });
       })
-      .then(
-        (result) => {
-          let newjs = result;
-          console.log(newjs);
-          this.props.Posting([...result]);
-          //this.props.Posting(newjs);
-        },
-        (error) => {
-          alert(error);
-        }
-      );
+      .catch((error) => {
+        console.error("Error fetching posts:", error);
+        this.setState({ loading: false, error: "Failed to load posts." });
+      });
   }
 
   render() {
     const { post } = this.props;
+    const { loading, error } = this.state;
+
     return (
       <div>
         <Intro />
-        <ul>
-          {post.map((data, i) => (
-            <Poster key={i} title={data.title} body={data.body} />
-          ))}
-        </ul>
+        {loading && <p>Loading...</p>}
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        {!loading && !error && (
+          <ul>
+            {post.map((data, i) => (
+              <Poster key={i} title={data.title} body={data.body} />
+            ))}
+          </ul>
+        )}
       </div>
     );
   }
