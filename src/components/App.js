@@ -1,58 +1,27 @@
 import React, { useEffect } from "react";
 import "./../styles/App.css";
-import PropTypes from "prop-types";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPosts } from "../redux";
+import Post from "./Post";
+import Posts from "./Posts";
 
-const APP = ({
-  Begin,
-  cards,
-  Timer,
-  WhenClick,
-  WhenReset,
-  Collect,
-  Update,
-}) => {
+const App = () => {
+  const dispatch = useDispatch();
+  const { posts, isLoading } = useSelector((state) => state);
+
   useEffect(() => {
-    if (Begin) {
-      try {
-        Time(); // Ensure Time is defined or passed as a prop
-      } catch (e) {
-        console.error("Error in useEffect:", e);
-      }
-    }
-  }, [Begin]); // Runs when Begin changes
-
-  console.log(Update, Begin, Timer);
-
+    dispatch(fetchPosts());
+  }, []);
   return (
     <div>
-      <div>
-        <Menu timer={Timer} WhenReset={WhenReset} />
-      </div>
-      <div className="main_game">
-        {cards.map((value, index) => (
-          <SmallBox
-            key={index}
-            src={value.src}
-            index={index}
-            id={value.name}
-            displayer={value.Display}
-            WhenClick={WhenClick}
-            Collect={Collect}
-          />
-        ))}
-      </div>
+      <h1>A short Naration of Lorem Ipsum</h1>
+      <h4>
+        Below Contains A title and Body gotten froma random API, Please take
+        your time to Review
+      </h4>
+      <Posts isLoading={isLoading} posts={posts} />
     </div>
   );
 };
 
-APP.propTypes = {
-  Begin: PropTypes.bool.isRequired,
-  cards: PropTypes.arrayOf(PropTypes.object).isRequired,
-  Timer: PropTypes.number.isRequired,
-  WhenClick: PropTypes.func.isRequired,
-  WhenReset: PropTypes.func.isRequired,
-  Collect: PropTypes.func.isRequired,
-  Update: PropTypes.any.isRequired,
-};
-
-export default APP;
+export default App;
