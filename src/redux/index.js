@@ -1,5 +1,5 @@
 import { applyMiddleware, legacy_createStore as createStore } from "redux";
-import { thunk } from "redux-thunk";
+import thunk from "redux-thunk"; // Corrected import for thunk
 
 const FETCH_POSTS_START = "FETCH_POSTS_START";
 const FETCH_POSTS_SUCCESS = "FETCH_POSTS_SUCCESS";
@@ -12,7 +12,6 @@ const initialState = {
 const fetchPostsStart = () => {
   return {
     type: FETCH_POSTS_START,
-    posts: [],
   };
 };
 
@@ -30,6 +29,10 @@ const fetchPosts = () => {
       .then((res) => res.json())
       .then((data) => {
         dispatch(fetchPostsSuccess(data));
+      })
+      .catch((error) => {
+        console.error("Error fetching posts:", error);
+        // You may also want to handle errors here
       });
   };
 };
@@ -55,8 +58,9 @@ const reducer = (state = initialState, action) => {
   }
 };
 
-export { fetchPosts };
-
+// Create store with thunk middleware
 const store = createStore(reducer, applyMiddleware(thunk));
 
+// Export the fetchPosts action creator and the store
+export { fetchPosts };
 export default store;
