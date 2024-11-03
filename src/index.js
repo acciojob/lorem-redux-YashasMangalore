@@ -1,13 +1,16 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import App from "./components/App";
-import store from "./redux";
+import { render } from "react-dom";
+import Reducers from "./components/reducers.js";
+import PostValue from "./components/connect.js";
+import { createStore } from "redux";
 import { Provider } from "react-redux";
 
-ReactDOM.render(
+const store = createStore(Reducers);
+//store.dispatch(UpdatePost({title:'hold',body:'my beer'}))
+console.log(store.getState());
+render(
   <Provider store={store}>
-    <App />
+    <PostValue />
   </Provider>,
-
   document.getElementById("root")
 );

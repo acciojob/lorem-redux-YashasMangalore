@@ -1,27 +1,41 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./../styles/App.css";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchPosts } from "../redux";
-import Post from "./Post";
-import Posts from "./Posts";
 
-const App = () => {
-  const dispatch = useDispatch();
-  const { posts, isLoading } = useSelector((state) => state);
+class APP extends React.Component {
+  componentWillUpdate() {
+    try {
+      if (this.props.Begin === true) this.Time();
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
-  useEffect(() => {
-    dispatch(fetchPosts());
-  }, []);
-  return (
-    <div>
-      <h1>A short Naration of Lorem Ipsum</h1>
-      <h4>
-        Below Contains A title and Body gotten froma random API, Please take
-        your time to Review
-      </h4>
-      <Posts isLoading={isLoading} posts={posts} />
-    </div>
-  );
-};
+  render() {
+    const { Begin, cards, Timer, WhenClick, WhenReset, Collect, Update } =
+      this.props;
+    console.log(Update, Begin, Timer);
+    return (
+      <div>
+        <div>
+          <Menu timer={Timer} WhenReset={WhenReset} />
+        </div>
 
-export default App;
+        <div className="main_game">
+          {cards.map((value, index) => (
+            <SmallBox
+              key={index}
+              src={value.src}
+              index={index}
+              id={value.name}
+              displayer={value.Display}
+              WhenClick={WhenClick}
+              Collect={Collect}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
+}
+
+export default APP;
