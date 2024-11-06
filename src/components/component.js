@@ -1,10 +1,43 @@
-const UPDATE = "UPDATE";
+import React from "react";
+import Poster from "./posting.js";
+import Intro from "./Intro.js";
 
-const UpdatePost = (post) => {
-  return {
-    type: UPDATE,
-    post,
-  };
-};
+class APP extends React.Component {
+  constructor(props) {
+    super(props);
+  }
 
-export default UpdatePost;
+  componentDidMount() {
+    fetch("https://jsonplaceholder.typicode.com/posts")
+      .then((res) => {
+        return res.json();
+      })
+      .then(
+        (result) => {
+          let newjs = result;
+          console.log(newjs);
+          this.props.Posting([...result]);
+          //this.props.Posting(newjs);
+        },
+        (error) => {
+          alert(error);
+        }
+      );
+  }
+
+  render() {
+    const { post } = this.props;
+    return (
+      <div>
+        <Intro />
+        <ul>
+          {post.map((data, i) => (
+            <Poster key={i} title={data.title} body={data.body} />
+          ))}
+        </ul>
+      </div>
+    );
+  }
+}
+
+export default APP;
